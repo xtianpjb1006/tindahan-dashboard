@@ -1,0 +1,58 @@
+/* Store dashboard (phone). Same look as the POS: warm neutrals, ube violet accent, colour only for meaning. */
+:root {
+  --bg: #F7F5F1; --card: #FFFFFF; --text: #1F1D1A; --muted: #6B665E; --line: #E6E1D8;
+  --accent: #5B3FA0; --accent-soft: #EEE9F7; --ok: #1E7A4C; --ok-bg: #E6F4EC; --err: #B3261E; --err-bg: #FCE9E7; --warn: #8A5A00; --warn-bg: #FFF4DC;
+  --bar: #8F887C;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #171614; --card: #22201D; --text: #F2EFE9; --muted: #B3ADA3; --line: #36332E;
+    --accent: #B9A4EE; --accent-soft: #2E2742; --ok: #7FD3A4; --ok-bg: #173226; --err: #F2A69E; --err-bg: #3A1D1A; --warn: #F2C46B; --warn-bg: #3A2E12; --bar: #8F887C; }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--bg); color: var(--text); }
+body { font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; -webkit-text-size-adjust: 100%; }
+main { max-width: 640px; margin: 0 auto; padding: 16px 16px 40px; display: grid; gap: 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px; }
+h1 { font-size: 22px; margin: 0; }
+h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); margin: 0 0 8px; font-weight: 600; }
+.muted { color: var(--muted); }
+.num { font-variant-numeric: tabular-nums; }
+label { display: block; font-weight: 600; margin: 12px 0 4px; }
+label.check { display: flex; gap: 8px; align-items: center; font-weight: 400; }
+input[type=password] { width: 100%; font: inherit; padding: 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--text); }
+input[type=checkbox] { width: 22px; height: 22px; accent-color: var(--accent); }
+button { font: inherit; font-weight: 600; min-height: 48px; padding: 0 20px; border-radius: 8px; border: 1px solid var(--line); background: var(--card); color: var(--text); cursor: pointer; }
+button[type=submit] { width: 100%; margin-top: 16px; background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (prefers-color-scheme: dark) { button[type=submit] { color: #171614; } }
+.msg { color: var(--err); min-height: 1.4em; margin: 8px 0 0; }
+
+.top { display: flex; justify-content: space-between; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.asof { color: var(--muted); font-size: 14px; }
+.banner { border-radius: 10px; padding: 12px 14px; font-weight: 600; }
+.banner.warn { background: var(--warn-bg); color: var(--warn); }
+.hero .big { font-size: 44px; font-weight: 750; line-height: 1.05; letter-spacing: -.01em; margin: 2px 0 6px; }
+.hero .sub { color: var(--muted); }
+.up { color: var(--ok); font-weight: 600; }
+.down { color: var(--err); font-weight: 600; }
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.stat .v { font-size: 24px; font-weight: 700; }
+.stat .s { color: var(--muted); font-size: 14px; }
+
+.bars { display: grid; grid-template-columns: repeat(7, 1fr); gap: 6px; align-items: end; height: 150px; }
+.bar { display: flex; flex-direction: column; justify-content: flex-end; align-items: center; height: 100%; gap: 4px; }
+.bar i { display: block; width: 100%; background: var(--bar); border-radius: 4px 4px 0 0; min-height: 2px; }
+.bar.today i { background: var(--accent); }
+.bar b { font-size: 11px; font-weight: 600; white-space: nowrap; }
+.bar span { font-size: 12px; color: var(--muted); }
+
+.rows { display: grid; gap: 0; }
+.row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-top: 1px solid var(--line); }
+.row:first-child { border-top: 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { border-radius: 999px; padding: 6px 12px; font-weight: 600; font-size: 14px; }
+.chip.err { background: var(--err-bg); color: var(--err); }
+.chip.warn { background: var(--warn-bg); color: var(--warn); }
+.chip.ok { background: var(--ok-bg); color: var(--ok); }
+.utang { color: var(--err); }
+.foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; color: var(--muted); font-size: 14px; }
+.voided { color: var(--muted); text-decoration: line-through; }
