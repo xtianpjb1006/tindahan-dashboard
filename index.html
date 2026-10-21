@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="color-scheme" content="light dark">
+  <title>Store Dashboard</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main id="app" aria-live="polite">
+    <form id="unlock" class="card unlock" autocomplete="off">
+      <h1>Store dashboard</h1>
+      <p class="muted">Type the passphrase you set in the POS (Settings → Sync &amp; backup → Online dashboard).</p>
+      <label for="pass">Passphrase</label>
+      <input id="pass" type="password" autocomplete="current-password" required>
+      <label class="check"><input id="remember" type="checkbox"> Remember on this phone</label>
+      <button type="submit">Open</button>
+      <p id="unlock-msg" class="msg" role="alert"></p>
+    </form>
+  </main>
+  <script type="module" src="app.js"></script>
+</body>
+</html>
