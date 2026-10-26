@@ -87,7 +87,7 @@ function render(s) {
       <h2>Latest sales</h2>
       <div class="rows">${s.recent.length ? s.recent.map((r) => `<div class="row${r.voided ? ' voided' : ''}"><span class="num">${time(r.at)} · No. ${String(r.number).padStart(6, '0')}${r.voided ? ' (voided)' : ''}</span><span class="num">${peso(r.total)} <span class="muted">${r.methods.map((m) => PAY[m] ?? m).join(' + ')}</span></span></div>`).join('') : '<p class="muted">No sales yet.</p>'}</div>
     </section>
-    <div class="foot"><span>Updates every hour from the POS · this page checks every 5 min</span><button type="button" id="lock">Lock</button></div>`;
+    <div class="foot"><span>Updates every ${(s.everyMin ?? 60) === 60 ? 'hour' : `${s.everyMin} min`} from the POS · this page checks every 5 min</span><button type="button" id="lock">Lock</button></div>`;
   document.getElementById('lock').onclick = () => { try { localStorage.removeItem(KEEP); } catch {} location.reload(); };
 }
 
