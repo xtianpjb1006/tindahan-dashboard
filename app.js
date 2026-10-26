@@ -1,9 +1,10 @@
 // Store dashboard on GitHub Pages: fetches data/summary.json (encrypted by the POS), decrypts it on this phone and
-// shows today's numbers at a glance. View only. Refreshes every 5 minutes; the POS sends a new summary every hour.
+// shows today's numbers at a glance. View only. Refreshes every 5 minutes; the POS sends a new summary every 5 minutes
+// to the repo's "data" branch (not the Pages branch), read through the GitHub API (raw file as a fallback).
 import { decryptEnvelope, decryptWithKey } from './crypto.js';
 
 const app = document.getElementById('app');
-const STALE_MIN = 90;
+const STALE_MIN = 20; // POS sends every 5 minutes
 const KEEP = 'tpos-dashboard-key'; // "Remember on this phone": the derived key + salt, never the passphrase
 const peso = (c) => `₱${(c / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const short = (c) => (c >= 100000000 ? `₱${(c / 100000000).toFixed(1)}M` : c >= 100000 ? `₱${(c / 100000).toFixed(c >= 1000000 ? 0 : 1)}k` : `₱${Math.round(c / 100)}`);
@@ -15,9 +16,16 @@ const b64 = (u8) => btoa(String.fromCharCode(...new Uint8Array(u8)));
 const unb64 = (s) => Uint8Array.from(atob(s), (c) => c.charCodeAt(0));
 
 let key = null; let keySalt = null;
+// On GitHub Pages (owner.github.io/repo/) the data comes from the "data" branch; anywhere else (a local test) from data/.
+const gh = location.hostname.endsWith('.github.io') ? { owner: location.hostname.split('.')[0], repo: location.pathname.split('/')[1] } : null;
 async function fetchEnvelope() {
-  const r = await fetch(`data/summary.json?t=${Date.now()}`, { cache: 'no-store' });
-  if (r.status === 404) throw new Error('No data yet — the POS sends its first summary within the hour after you turn the online dashboard on.');
+  const t = Date.now();
+  let r = await fetch(gh ? `https://api.github.com/repos/${gh.owner}/${gh.repo}/contents/data/summary.json?ref=data&t=${t}` : `data/summary.json?t=${t}`,
+    { cache: 'no-store', headers: gh ? { Accept: 'application/vnd.github.raw+json' } : {} });
+  if (gh && (r.status === 403 || r.status === 429)) // API limit (60 an hour per internet address) → the raw file, up to 5 min older
+    r = await fetch(`https://raw.githubusercontent.com/${gh.owner}/${gh.repo}/data/data/summary.json?t=${t}`, { cache: 'no-store' });
+  if (gh && r.status === 404) r = await fetch(`data/summary.json?t=${t}`, { cache: 'no-store' }); // a POS from before 2026-10-26 still sends here
+  if (r.status === 404) throw new Error('No data yet — the POS sends its first summary within 5 minutes after you turn the online dashboard on.');
   if (!r.ok) throw new Error(`Could not load the data (${r.status}). Check your internet.`);
   return r.json();
 }
