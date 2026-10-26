@@ -4,7 +4,7 @@
 import { decryptEnvelope, decryptWithKey } from './crypto.js';
 
 const app = document.getElementById('app');
-const STALE_MIN = 20; // POS sends every 5 minutes
+const staleMin = (s) => (s.everyMin ?? 60) + 15; // the POS's own update time (5, 15, 30 or 60 min) + 15 min of slack
 const KEEP = 'tpos-dashboard-key'; // "Remember on this phone": the derived key + salt, never the passphrase
 const peso = (c) => `₱${(c / 100).toLocaleString('en-PH', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 const short = (c) => (c >= 100000000 ? `₱${(c / 100000000).toFixed(1)}M` : c >= 100000 ? `₱${(c / 100000).toFixed(c >= 1000000 ? 0 : 1)}k` : `₱${Math.round(c / 100)}`);
@@ -39,7 +39,7 @@ function render(s) {
   const a = s.alerts;
   app.innerHTML = `
     <div class="top"><h1>${esc(s.store)}</h1><span class="asof">As of ${time(s.generatedAt)}${s.date !== new Date().toLocaleDateString('en-CA') ? `, ${esc(s.date)}` : ''}</span></div>
-    ${ageMin > STALE_MIN ? `<div class="banner warn" role="status">⚠ Not updated for ${ageMin > 120 ? `${Math.round(ageMin / 60)} hours` : `${Math.round(ageMin)} minutes`} — the POS may be closed or offline. These are the numbers from ${time(s.generatedAt)}.</div>` : ''}
+    ${ageMin > staleMin(s) ? `<div class="banner warn" role="status">⚠ Not updated for ${ageMin > 120 ? `${Math.round(ageMin / 60)} hours` : `${Math.round(ageMin)} minutes`} — the POS may be closed or offline. These are the numbers from ${time(s.generatedAt)}.</div>` : ''}
     <section class="card hero">
       <h2>Sales today</h2>
       <div class="big num">${peso(d.total)}</div>
