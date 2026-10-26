@@ -38,6 +38,11 @@ function render(s) {
       <div class="sub">${d.count} sale${d.count === 1 ? '' : 's'} · ${diff == null ? 'none by this time last week' : `<span class="${diff >= 0 ? 'up' : 'down'}">${diff >= 0 ? '▲' : '▼'} ${Math.abs(diff)}%</span> vs same time last ${dayName(s.week[6].date)} (${peso(lw.total)})`}</div>
       ${s.load.total ? `<div class="sub">+ Load ${peso(s.load.total)} (${s.load.count})</div>` : ''}
     </section>
+    ${s.profit ? `<section class="card stat">
+      <h2>Profit today</h2>
+      <div class="v num${s.profit.profit < 0 ? ' down' : ''}">${peso(s.profit.profit)}</div>
+      <div class="s">${s.profit.revenue ? `${(s.profit.margin / 100).toFixed(1)}% margin on ${peso(s.profit.revenue)} sales with cost` : 'No sales with cost yet today'}${s.profit.uncosted ? ` · ${peso(s.profit.uncosted)} without cost not counted` : ''}</div>
+    </section>` : ''}
     <section class="card">
       <h2>Last 7 days</h2>
       <div class="bars" role="img" aria-label="Sales per day: ${s.week.map((w) => `${dayName(w.date)} ${peso(w.total)}`).join(', ')}">
